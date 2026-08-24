@@ -1,0 +1,51 @@
+name: V2-SP-NT
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */8 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }} 
+
+      - name: Download latest configs.txt
+        run: |
+          curl -o configs.txt https://raw.githubusercontent.com/Hmidqorbani/Hmidqorbani/refs/heads/main/mark.txt
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Download and install Xray-core
+        run: |
+          wget -qO xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
+          unzip -q xray.zip -d xray
+          chmod +x xray/xray
+          echo "XRAY_PATH=$(pwd)/xray/xray" >> $GITHUB_ENV
+
+      - name: Run speed test
+        run: node index.js
+
+      - name: Commit and push result.txt
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add result.txt
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update V2-SP-NT"
+            git push
+          fi
