@@ -12,7 +12,7 @@ const path = require("path");
 // -------- تنظیمات --------
 const CONFIG = {
   configsFile: "./configs.txt",
-  speedThresholdMbps: 5.0,
+  speedThresholdMbps: 8.0,
   timeoutMs: 30000,
   concurrency: 1,
   outputFile: "./result.txt",
