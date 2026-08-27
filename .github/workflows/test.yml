@@ -3,7 +3,7 @@ name: V2-SP-NT
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */2 * * *'
+    - cron: '0 */1 * * *'
 
 jobs:
   test:
@@ -46,6 +46,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update V2-SP-NT"
+            git commit -m "Update V2-SP-NT [skip ci]"
             git push
           fi
